@@ -185,6 +185,14 @@ img {
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
 
+.show-on-small { display: block; }
+.show-on-large { display: none; }
+
+@media (min-width: 1024px) {
+  .show-on-small { display: none; }
+  .show-on-large { display: block; }
+}
+
 /*
 FOR DARK MODE
 

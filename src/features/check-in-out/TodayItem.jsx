@@ -8,31 +8,55 @@ import CheckoutButton from "./CheckoutButton";
 const StyledTodayItem = styled.li`
   display: grid;
   grid-template-columns:
-    9rem /* Status */
-    3rem /* Flag */
+    7.5rem /* Status */
+    2.4rem /* Flag */
     1fr /* Guest name */
-    4rem /* Nights */
-    9rem; /* Action */
+    3rem /* Nights */
+    8rem; /* Action */
 
   align-items: center;
-  column-gap: 1.6rem;
+  column-gap: 1rem;
 
-  font-size: 1.4rem;
-  padding: 1rem 0;
+  font-size: 1.3rem;
+  padding: 0.9rem 0;
   border-bottom: 1px solid var(--color-grey-100);
 
   &:first-child {
     border-top: 1px solid var(--color-grey-100);
+  }
+
+  @media (min-width: 480px) {
+    grid-template-columns:
+      8.5rem /* Status */
+      2.8rem /* Flag */
+      1fr /* Guest name */
+      3.5rem /* Nights */
+      8.5rem; /* Action */
+
+    column-gap: 1.4rem;
+    font-size: 1.4rem;
+    padding: 1rem 0;
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns:
+      9rem /* Status */
+      3rem /* Flag */
+      1fr /* Guest name */
+      4rem /* Nights */
+      9rem; /* Action */
+
+    column-gap: 1.6rem;
   }
 `;
 
 const Guest = styled.div`
   font-weight: 500;
   color: var(--color-grey-700);
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 `;
 
 const Nights = styled.div`
@@ -72,7 +96,6 @@ function TodayItem({ activity }) {
             Check-in
           </Button>
         )}
-
         {status === "checked-in" && <CheckoutButton bookingId={id} />}
       </Action>
     </StyledTodayItem>

@@ -2,21 +2,36 @@ import styled, { css } from "styled-components";
 
 const sizes = {
   small: css`
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 1.1rem;
+    padding: 0.4rem 0.7rem;
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;
+
+    @media (min-width: 480px) {
+      font-size: 1.2rem;
+      padding: 0.4rem 0.8rem;
+    }
   `,
   medium: css`
-    font-size: 1.4rem;
-    padding: 1.2rem 1.6rem;
+    font-size: 1.3rem;
+    padding: 1rem 1.4rem;
     font-weight: 500;
+
+    @media (min-width: 480px) {
+      font-size: 1.4rem;
+      padding: 1.2rem 1.6rem;
+    }
   `,
   large: css`
-    font-size: 1.6rem;
-    padding: 1.2rem 2.4rem;
+    font-size: 1.4rem;
+    padding: 1rem 2rem;
     font-weight: 500;
+
+    @media (min-width: 480px) {
+      font-size: 1.6rem;
+      padding: 1.2rem 2.4rem;
+    }
   `,
 };
 
@@ -52,6 +67,9 @@ const Button = styled.button`
   border: none;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 
   ${(props) => sizes[props.size]}
   ${(props) => variations[props.variations]}
@@ -61,4 +79,5 @@ Button.defaultProps = {
   variations: "primary",
   size: "medium",
 };
+
 export default Button;

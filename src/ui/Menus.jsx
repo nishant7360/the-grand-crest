@@ -17,6 +17,11 @@ const StyledToggle = styled.button`
   border-radius: var(--border-radius-sm);
   transform: translateX(0.8rem);
   transition: all 0.2s;
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: var(--color-grey-100);
@@ -31,13 +36,16 @@ const StyledToggle = styled.button`
 
 const StyledList = styled.ul`
   position: fixed;
-
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
-
   right: ${(props) => props.position.x}px;
   top: ${(props) => props.position.y}px;
+  z-index: 1000;
+  min-width: 16rem;
+
+  /* Prevent list from going off-screen on small devices */
+  max-width: calc(100vw - 2.4rem);
 `;
 
 const StyledButton = styled.button`
@@ -45,9 +53,10 @@ const StyledButton = styled.button`
   text-align: left;
   background: none;
   border: none;
-  padding: 1.2rem 2.4rem;
+  padding: 1.2rem 2rem;
   font-size: 1.4rem;
   transition: all 0.2s;
+  min-height: 4.4rem;
 
   display: flex;
   align-items: center;
@@ -62,6 +71,11 @@ const StyledButton = styled.button`
     height: 1.6rem;
     color: var(--color-grey-400);
     transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 480px) {
+    padding: 1.2rem 2.4rem;
   }
 `;
 
@@ -85,6 +99,7 @@ function Menus({ children }) {
 
 function Toggle({ id }) {
   const { open, close, openId, setPosition } = useContext(MenusContext);
+
   function handleClick(e) {
     e.stopPropagation();
     const rect = e.target.closest("button").getBoundingClientRect();
@@ -109,6 +124,7 @@ function List({ id, children }) {
   const ref = useOutsideClick(close, false);
 
   if (openId != id) return null;
+
   return createPortal(
     <StyledList position={position} ref={ref}>
       {children}
@@ -119,10 +135,12 @@ function List({ id, children }) {
 
 function Button({ children, icon, onClick }) {
   const { close } = useContext(MenusContext);
+
   function handleClick() {
     onClick?.();
     close();
   }
+
   return (
     <li>
       <StyledButton onClick={handleClick}>

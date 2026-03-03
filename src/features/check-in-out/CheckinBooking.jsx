@@ -17,11 +17,18 @@ import { useCheckin } from "./useCheckin.js";
 import { useSettings } from "../settings/useSettings.js";
 
 const Box = styled.div`
-  /* Box */
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
-  padding: 2.4rem 4rem;
+  padding: 2rem 2.4rem;
+
+  @media (min-width: 480px) {
+    padding: 2.4rem 3.2rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 2.4rem 4rem;
+  }
 `;
 
 function CheckinBooking() {
@@ -35,6 +42,7 @@ function CheckinBooking() {
   const moveBack = useMoveBack();
 
   if (isLoading || isLoadingSettings) return <Spinner />;
+
   const {
     _id: bookingId,
     guestId,

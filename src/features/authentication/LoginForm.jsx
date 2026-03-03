@@ -9,8 +9,38 @@ import SpinnerMini from "../../ui/SpinnerMini";
 
 const StyledLoginForm = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 1.6rem;
   flex-direction: column;
+  width: 100%;
+
+  @media (min-width: 480px) {
+    gap: 2rem;
+  }
+`;
+
+const StyledLabel = styled.label`
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--color-grey-700);
+  margin-bottom: -0.8rem;
+
+  @media (min-width: 480px) {
+    font-size: 1.4rem;
+  }
+`;
+
+const ButtonRow = styled(Row)`
+  margin-top: 0.8rem;
+
+  & button {
+    width: 100%;
+
+    @media (min-width: 480px) {
+      width: auto;
+      min-width: 14rem;
+      align-self: flex-end;
+    }
+  }
 `;
 
 function LoginForm() {
@@ -35,19 +65,19 @@ function LoginForm() {
   return (
     <Form onSubmit={handleSubmit}>
       <StyledLoginForm>
-        <label>Email Address</label>
+        <StyledLabel>Email Address</StyledLabel>
         <Row label="Email address">
           <Input
             type="email"
             id="email"
-            // This makes this form better for password managers
             autoComplete="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isLoggingIn}
           />
         </Row>
-        <label>Password</label>
+
+        <StyledLabel>Password</StyledLabel>
         <Row label="Password">
           <Input
             type="password"
@@ -58,11 +88,12 @@ function LoginForm() {
             disabled={isLoggingIn}
           />
         </Row>
-        <Row>
+
+        <ButtonRow>
           <Button size="large" disabled={isLoggingIn}>
             {!isLoggingIn ? "Login" : <SpinnerMini />}
           </Button>
-        </Row>
+        </ButtonRow>
       </StyledLoginForm>
     </Form>
   );

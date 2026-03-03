@@ -7,24 +7,35 @@ import Spinner from "../../ui/Spinner";
 import TodayItem from "./TodayItem";
 
 const StyledToday = styled.div`
-  /* Box */
   background-color: var(--color-grey-0);
   border: 1px solid var(--color-grey-100);
   border-radius: var(--border-radius-md);
 
-  padding: 3.2rem;
+  padding: 2rem 1.6rem;
+  padding-top: 1.6rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  grid-column: 1 / span 2;
-  padding-top: 2.4rem;
+  gap: 1.6rem;
+  grid-column: 1 / -1;
+
+  @media (min-width: 640px) {
+    padding: 2.4rem;
+    padding-top: 2rem;
+    gap: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-column: 1 / span 2;
+    padding: 3.2rem;
+    padding-top: 2.4rem;
+    gap: 2.4rem;
+  }
 `;
 
 const TodayList = styled.ul`
   overflow: scroll;
   overflow-x: hidden;
 
-  /* Removing scrollbars for webkit, firefox, and ms, respectively */
   &::-webkit-scrollbar {
     width: 0 !important;
   }
@@ -34,7 +45,7 @@ const TodayList = styled.ul`
 
 const NoActivity = styled.p`
   text-align: center;
-  font-size: 1.8rem;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
   font-weight: 500;
   margin-top: 0.8rem;
 `;

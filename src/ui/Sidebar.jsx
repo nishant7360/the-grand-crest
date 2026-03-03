@@ -4,12 +4,22 @@ import MainNav from "./MainNav";
 
 const StyledSideBar = styled.aside`
   background-color: var(--color-grey-0);
-  padding: 3.2rem 2.4rem;
-  border-right: 1px soldi var(--color-grey-100);
-  grid-row: 1/ -1;
+  padding: 2.4rem 1.6rem;
+  border-right: 1px solid var(--color-grey-100);
+  grid-row: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 3.2rem;
+  gap: 2.4rem;
+
+  @media (min-width: 768px) {
+    padding: 2.8rem 2rem;
+    gap: 2.8rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 3.2rem 2.4rem;
+    gap: 3.2rem;
+  }
 `;
 
 function Sidebar() {

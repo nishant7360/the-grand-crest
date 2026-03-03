@@ -9,11 +9,17 @@ const StyledFilter = styled.div`
   padding: 0.4rem;
   display: flex;
   gap: 0.4rem;
+  flex-wrap: wrap;
+
+  @media (min-width: 480px) {
+    flex-wrap: nowrap;
+  }
 `;
 
 const FilterButton = styled.button`
   background-color: var(--color-grey-0);
   border: none;
+  flex: 1;
 
   ${(props) =>
     props.active &&
@@ -24,10 +30,18 @@ const FilterButton = styled.button`
 
   border-radius: var(--border-radius-sm);
   font-weight: 500;
-  font-size: 1.4rem;
-  /* To give the same height as select */
-  padding: 0.44rem 0.8rem;
+  font-size: 1.3rem;
+  padding: 0.44rem 0.6rem;
   transition: all 0.3s;
+  min-height: 4.4rem;
+  white-space: nowrap;
+
+  @media (min-width: 480px) {
+    font-size: 1.4rem;
+    padding: 0.44rem 0.8rem;
+    min-height: unset;
+    flex: unset;
+  }
 
   &:hover:not(:disabled) {
     background-color: var(--color-brand-600);
@@ -44,6 +58,7 @@ function Filter({ filterField, options }) {
     if (searchParams.get("page")) searchParams.set("page", 1);
     setSearchParams(searchParams);
   }
+
   return (
     <StyledFilter>
       {options.map((option) => (

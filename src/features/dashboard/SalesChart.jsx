@@ -12,13 +12,22 @@ import {
   YAxis,
 } from "recharts";
 import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
+
 const StyledSalesChart = styled(DashboardBox)`
   grid-column: 1 / -1;
 
-  /* Hack to change grid line colors */
   & .recharts-cartesian-grid-horizontal line,
   & .recharts-cartesian-grid-vertical line {
     stroke: var(--color-grey-300);
+  }
+`;
+
+const ChartHeading = styled(Heading)`
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  line-height: 1.4;
+
+  @media (max-width: 480px) {
+    text-align: center;
   }
 `;
 
@@ -55,23 +64,30 @@ function SalesChart({ bookings, numDays }) {
         text: "#374151",
         background: "#fff",
       };
+
   return (
     <StyledSalesChart>
-      <Heading as="h2">
-        Sales from {format(allDates.at(0), "MMMM dd yyyy")} &mdash;
-        {format(allDates.at(-1), "MMMM dd yyyy")}
-      </Heading>
+      <ChartHeading as="h2">
+        Sales from {format(allDates.at(0), "MMM dd yyyy")} &mdash;{" "}
+        {format(allDates.at(-1), "MMM dd yyyy")}
+      </ChartHeading>
+
       <ResponsiveContainer height={300} width="100%">
-        <AreaChart data={data}>
+        <AreaChart
+          data={data}
+          margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+        >
           <XAxis
             dataKey="label"
-            tick={{ fill: colors.text }}
+            tick={{ fill: colors.text, fontSize: "clamp(10px, 1.5vw, 13px)" }}
             tickLine={{ stroke: colors.text }}
+            interval="preserveStartEnd"
           />
           <YAxis
             unit="$"
-            tick={{ fill: colors.text }}
+            tick={{ fill: colors.text, fontSize: "clamp(10px, 1.5vw, 13px)" }}
             tickLine={{ stroke: colors.text }}
+            width={55}
           />
           <CartesianGrid strokeDasharray="4" />
           <Tooltip contentStyle={{ backgroundColor: colors.background }} />
@@ -99,4 +115,5 @@ function SalesChart({ bookings, numDays }) {
     </StyledSalesChart>
   );
 }
+
 export default SalesChart;

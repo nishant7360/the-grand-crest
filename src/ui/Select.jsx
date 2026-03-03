@@ -12,6 +12,14 @@ const StyledSelect = styled.select`
   background-color: var(--color-grey-0);
   font-weight: 500;
   box-shadow: var(--shadow-sm);
+  width: 100%;
+  min-height: 4.4rem;
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    width: auto;
+    min-height: unset;
+  }
 `;
 
 function Select({ options, value, type, onChange }) {
@@ -25,4 +33,5 @@ function Select({ options, value, type, onChange }) {
     </StyledSelect>
   );
 }
+
 export default Select;

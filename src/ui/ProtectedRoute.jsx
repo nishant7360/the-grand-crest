@@ -6,14 +6,22 @@ import { useEffect } from "react";
 
 const FullPage = styled.div`
   height: 100vh;
+  width: 100%;
   background-color: var(--color-grey-50);
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+
+  /* Prevent layout shift on mobile when browser UI appears/disappears */
+  @supports (height: 100dvh) {
+    height: 100dvh;
+  }
 `;
 
 function ProtectedRoute({ children }) {
   const navigate = useNavigate();
+
   //1.Load the authenticated user
   const { isLoading, isAuthenticated } = useUser();
 
@@ -24,6 +32,7 @@ function ProtectedRoute({ children }) {
     },
     [isLoading, isAuthenticated, navigate],
   );
+
   //2.While loading show a spinner
   if (isLoading)
     return (
@@ -31,7 +40,8 @@ function ProtectedRoute({ children }) {
         <Spinner />
       </FullPage>
     );
-  //4 if user is authenticated then redner the app
+
+  //4 if user is authenticated then render the app
   if (isAuthenticated) return children;
 }
 

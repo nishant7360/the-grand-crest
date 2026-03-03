@@ -3,37 +3,53 @@ import styled from "styled-components";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
   overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 `;
 
 const CommonRow = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
-  column-gap: 2.4rem;
+  column-gap: 1.6rem;
   align-items: center;
   transition: none;
+  min-width: fit-content;
+
+  @media (min-width: 768px) {
+    column-gap: 2.4rem;
+    min-width: unset;
+  }
 `;
 
 const StyledHeader = styled(CommonRow)`
-  padding: 1.6rem 2.4rem;
-
+  padding: 1.6rem 1.6rem;
   background-color: var(--color-grey-50);
   border-bottom: 1px solid var(--color-grey-100);
   text-transform: uppercase;
   letter-spacing: 0.4px;
   font-weight: 600;
   color: var(--color-grey-600);
+  font-size: 1.2rem;
+
+  @media (min-width: 768px) {
+    padding: 1.6rem 2.4rem;
+    font-size: inherit;
+  }
 `;
 
 const StyledRow = styled(CommonRow)`
-  padding: 1.2rem 2.4rem;
+  padding: 1.2rem 1.6rem;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
+  }
+
+  @media (min-width: 768px) {
+    padding: 1.2rem 2.4rem;
   }
 `;
 
@@ -47,7 +63,6 @@ const Footer = styled.footer`
   justify-content: center;
   padding: 1.2rem;
 
-  /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
   &:not(:has(*)) {
     display: none;
   }
@@ -78,6 +93,7 @@ function Header({ children }) {
     </StyledHeader>
   );
 }
+
 function Row({ children }) {
   const { columns } = useContext(TableContext);
   return (
@@ -86,9 +102,9 @@ function Row({ children }) {
     </StyledRow>
   );
 }
+
 function Body({ data, render }) {
   if (!data.length) return <Empty>No data to show at this moment</Empty>;
-
   return <StyledBody>{data.map(render)}</StyledBody>;
 }
 

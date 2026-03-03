@@ -11,29 +11,62 @@ import Menus from "../../ui/Menus";
 
 const Img = styled.img`
   display: block;
-  width: 6.4rem;
+  width: 5.6rem;
   aspect-ratio: 3 / 2;
   object-fit: cover;
   object-position: center;
   transform: scale(1.5) translateX(-7px);
+
+  @media (min-width: 768px) {
+    width: 6.4rem;
+  }
 `;
 
 const Cabin = styled.div`
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--color-grey-600);
   font-family: "Sono";
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 `;
 
 const Price = styled.div`
   font-family: "Sono";
   font-weight: 600;
+  font-size: 1.3rem;
+
+  @media (min-width: 768px) {
+    font-size: inherit;
+  }
 `;
 
 const Discount = styled.div`
   font-family: "Sono";
   font-weight: 500;
   color: var(--color-green-700);
+  font-size: 1.3rem;
+
+  @media (min-width: 768px) {
+    font-size: inherit;
+  }
+`;
+
+const Capacity = styled.div`
+  font-size: 1.3rem;
+  white-space: nowrap;
+
+  @media (min-width: 768px) {
+    font-size: inherit;
+    white-space: normal;
+  }
 `;
 
 function CabinRow({ cabin }) {
@@ -65,12 +98,12 @@ function CabinRow({ cabin }) {
     <Table.Row>
       <Img src={image} />
       <Cabin>{name}</Cabin>
-      <div>Fits upto {maxCapacity} guests</div>
+      <Capacity>Fits upto {maxCapacity} guests</Capacity>
       <Price>{formatCurrency(regularPrice)}</Price>
       {discount ? (
         <Discount>{formatCurrency(discount)}</Discount>
       ) : (
-        <span>&mdash; </span>
+        <span>&mdash;</span>
       )}
       <div>
         <Modal>

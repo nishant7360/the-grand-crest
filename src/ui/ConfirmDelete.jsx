@@ -3,7 +3,7 @@ import Button from "./Button";
 import Heading from "./Heading";
 
 const StyledConfirmDelete = styled.div`
-  width: 40rem;
+  width: min(40rem, 90vw);
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -11,12 +11,27 @@ const StyledConfirmDelete = styled.div`
   & p {
     color: var(--color-grey-500);
     margin-bottom: 1.2rem;
+    font-size: 1.3rem;
+    line-height: 1.6;
+
+    @media (min-width: 480px) {
+      font-size: inherit;
+    }
   }
 
   & div {
     display: flex;
     justify-content: flex-end;
     gap: 1.2rem;
+    flex-wrap: wrap;
+
+    & button {
+      flex: 1;
+
+      @media (min-width: 480px) {
+        flex: unset;
+      }
+    }
   }
 `;
 

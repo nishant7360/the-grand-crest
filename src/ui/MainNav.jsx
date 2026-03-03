@@ -12,7 +12,11 @@ import {
 const NavList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.4rem;
+
+  @media (min-width: 768px) {
+    gap: 0.8rem;
+  }
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -20,16 +24,21 @@ const StyledNavLink = styled(NavLink)`
   &:visited {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1rem;
 
     color: var(--color-grey-600);
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 500;
-    padding: 1.2rem 2.4rem;
+    padding: 1rem 1.6rem;
     transition: all 0.3s;
+
+    @media (min-width: 768px) {
+      gap: 1.2rem;
+      font-size: 1.6rem;
+      padding: 1.2rem 2.4rem;
+    }
   }
 
-  /* This works because react-router places the active class on the active NavLink */
   &:hover,
   &:active,
   &.active:link,
@@ -40,10 +49,16 @@ const StyledNavLink = styled(NavLink)`
   }
 
   & svg {
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 2rem;
+    height: 2rem;
     color: var(--color-grey-400);
     transition: all 0.3s;
+    flex-shrink: 0;
+
+    @media (min-width: 768px) {
+      width: 2.4rem;
+      height: 2.4rem;
+    }
   }
 
   &:hover svg,
@@ -60,7 +75,6 @@ function MainNav() {
       <NavList>
         <li>
           <StyledNavLink to="/dashboard">
-            {" "}
             <HiOutlineHome />
             <span>Home</span>
           </StyledNavLink>

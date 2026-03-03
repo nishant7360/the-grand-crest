@@ -27,33 +27,41 @@ const StyledBookingDataBox = styled.section`
 /* ---------- HEADER ---------- */
 
 const Header = styled.header`
-  padding: 2.8rem 3.2rem;
+  padding: 2rem 2.4rem;
   background-color: var(--color-grey-0);
   border-bottom: 1px solid var(--color-grey-100);
 
   display: flex;
-  justify-content: space-between;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.2rem;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 1.6rem;
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.4rem 2.8rem;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 2.8rem 3.2rem;
   }
 `;
 
 const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
 
   svg {
-    width: 2.6rem;
-    height: 2.6rem;
+    width: 2.2rem;
+    height: 2.2rem;
     color: var(--color-grey-700);
+    flex-shrink: 0;
   }
 
   p {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 600;
     color: var(--color-grey-800);
   }
@@ -63,25 +71,45 @@ const HeaderLeft = styled.div`
     color: var(--color-grey-600);
     font-weight: 500;
   }
+
+  @media (min-width: 768px) {
+    gap: 1.2rem;
+
+    svg {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+
+    p {
+      font-size: 1.8rem;
+    }
+  }
 `;
 
 const HeaderRight = styled.div`
-  text-align: right;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: var(--color-grey-500);
+  text-align: left;
+  line-height: 1.5;
 
-  @media (max-width: 768px) {
-    text-align: left;
+  @media (min-width: 640px) {
+    text-align: right;
+    font-size: 1.4rem;
   }
 `;
 
 /* ---------- SECTION ---------- */
 
 const Section = styled.section`
-  padding: 3.2rem;
+  padding: 2rem 2.4rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    padding: 3.2rem;
+    gap: 2.4rem;
+  }
 `;
 
 /* ---------- GUEST ---------- */
@@ -89,7 +117,7 @@ const Section = styled.section`
 const Guest = styled.div`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   flex-wrap: wrap;
 
   font-size: 1.4rem;
@@ -103,26 +131,36 @@ const Guest = styled.div`
   span {
     opacity: 0.35;
   }
+
+  @media (max-width: 480px) {
+    font-size: 1.3rem;
+    gap: 0.8rem;
+
+    /* Hide bullet separators on very small screens */
+    span {
+      display: none;
+    }
+  }
 `;
 
 /* ---------- PRICE ---------- */
 
 const Price = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.4rem;
 
-  padding: 2.4rem;
+  padding: 2rem;
   border-radius: 1.2rem;
-
   background-color: var(--color-grey-50);
   border: 1px solid var(--color-grey-100);
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.6rem;
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 2.4rem;
   }
 `;
 
@@ -135,23 +173,34 @@ const StatusPill = styled.span`
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  align-self: flex-start;
 
   background-color: ${(props) =>
     props.isPaid ? "var(--color-green-100)" : "var(--color-yellow-100)"};
 
   color: ${(props) =>
     props.isPaid ? "var(--color-green-700)" : "var(--color-yellow-700)"};
+
+  @media (min-width: 640px) {
+    align-self: center;
+    flex-shrink: 0;
+  }
 `;
 
 /* ---------- FOOTER ---------- */
 
 const Footer = styled.footer`
-  padding: 1.6rem 3.2rem;
+  padding: 1.4rem 2.4rem;
   border-top: 1px solid var(--color-grey-100);
 
   font-size: 1.2rem;
   color: var(--color-grey-500);
-  text-align: right;
+  text-align: left;
+
+  @media (min-width: 640px) {
+    text-align: right;
+    padding: 1.6rem 3.2rem;
+  }
 `;
 
 /* =======================
@@ -181,6 +230,7 @@ function BookingDataBox({ booking }) {
   const nationalID = guestId?.nationalID;
   const cabinName = cabinId?.name;
   const cabinPrice = cabinId?.regular_price;
+
   return (
     <StyledBookingDataBox>
       <Header>
@@ -234,7 +284,7 @@ function BookingDataBox({ booking }) {
               )} breakfast)`}
           </DataItem>
 
-          <StatusPill>{isPaid ? "Paid" : "Pending"}</StatusPill>
+          <StatusPill isPaid={isPaid}>{isPaid ? "Paid" : "Pending"}</StatusPill>
         </Price>
       </Section>
 

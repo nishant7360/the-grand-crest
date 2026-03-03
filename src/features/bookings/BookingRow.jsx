@@ -20,30 +20,51 @@ import { useCheckout } from "../check-in-out/useCheckout";
 import { useDeleteBooking } from "./useDeleteBooking";
 
 const Cabin = styled.div`
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--color-grey-600);
   font-family: "Sono";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 `;
 
 const Stacked = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 0;
 
   & span:first-child {
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & span:last-child {
     color: var(--color-grey-500);
     font-size: 1.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
 const Amount = styled.div`
   font-family: "Sono";
   font-weight: 500;
+  font-size: 1.3rem;
+  white-space: nowrap;
+
+  @media (min-width: 768px) {
+    font-size: inherit;
+  }
 `;
 
 function BookingRow({ booking }) {
@@ -89,7 +110,7 @@ function BookingRow({ booking }) {
           &rarr; {numNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;
+          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
           {format(new Date(endDate), "MMM dd yyyy")}
         </span>
       </Stacked>
@@ -97,6 +118,7 @@ function BookingRow({ booking }) {
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
       <Amount>{formatCurrency(totalPrice)}</Amount>
+
       <Modal>
         <Menus.Menu>
           <Menus.Toggle id={bookingId} />
@@ -124,7 +146,6 @@ function BookingRow({ booking }) {
                 Checkout
               </Menus.Button>
             )}
-
             <Modal.Open opens="delete">
               <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
             </Modal.Open>

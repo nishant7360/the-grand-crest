@@ -12,8 +12,23 @@ const StyledModal = styled.div`
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
-  padding: 3.2rem 4rem;
+  padding: 2.4rem 2rem;
   transition: all 0.5s;
+  width: min(95vw, 80rem);
+  max-height: 90dvh;
+  overflow-y: auto;
+  z-index: 1001;
+
+  @media (min-width: 480px) {
+    padding: 2.8rem 3.2rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 3.2rem 4rem;
+    width: auto;
+    max-height: unset;
+    overflow-y: visible;
+  }
 `;
 
 const Overlay = styled.div`
@@ -26,6 +41,10 @@ const Overlay = styled.div`
   backdrop-filter: blur(4px);
   z-index: 1000;
   transition: all 0.5s;
+
+  @supports (height: 100dvh) {
+    height: 100dvh;
+  }
 `;
 
 const Button = styled.button`
@@ -38,6 +57,11 @@ const Button = styled.button`
   position: absolute;
   top: 1.2rem;
   right: 1.9rem;
+  min-width: 4.4rem;
+  min-height: 4.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: var(--color-grey-100);
@@ -46,9 +70,6 @@ const Button = styled.button`
   & svg {
     width: 2.4rem;
     height: 2.4rem;
-    /* Sometimes we need both */
-    /* fill: var(--color-grey-500);
-    stroke: var(--color-grey-500); */
     color: var(--color-grey-500);
   }
 `;
@@ -59,6 +80,7 @@ function Modal({ children }) {
   const [openName, setOpenName] = useState("");
   const close = () => setOpenName("");
   const open = setOpenName;
+
   return (
     <ModalContext.Provider value={{ openName, close, open }}>
       {children}
@@ -68,16 +90,15 @@ function Modal({ children }) {
 
 function Open({ children, opens }) {
   const { open } = useContext(ModalContext);
-
   return cloneElement(children, { onClick: () => open(opens) });
 }
 
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
-
   const ref = useOutsideClick(close);
 
   if (name !== openName) return null;
+
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>

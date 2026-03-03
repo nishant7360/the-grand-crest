@@ -9,36 +9,48 @@ const StyledPagination = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+
+  @media (min-width: 480px) {
+    flex-wrap: nowrap;
+  }
 `;
 
 const P = styled.p`
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin-left: 0.8rem;
 
   & span {
     font-weight: 600;
+  }
+
+  @media (min-width: 480px) {
+    font-size: 1.4rem;
   }
 `;
 
 const Buttons = styled.div`
   display: flex;
   gap: 0.6rem;
+  flex-shrink: 0;
 `;
 
 const PaginationButton = styled.button`
   background-color: ${(props) =>
-    props.active ? " var(--color-brand-600)" : "var(--color-grey-50)"};
-  color: ${(props) => (props.active ? " var(--color-brand-50)" : "inherit")};
+    props.active ? "var(--color-brand-600)" : "var(--color-grey-50)"};
+  color: ${(props) => (props.active ? "var(--color-brand-50)" : "inherit")};
   border: none;
   border-radius: var(--border-radius-sm);
   font-weight: 500;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
+  min-height: 4.4rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  padding: 0.6rem 1.2rem;
+  padding: 0.6rem 0.8rem;
   transition: all 0.3s;
 
   &:has(span:last-child) {
@@ -52,6 +64,22 @@ const PaginationButton = styled.button`
   & svg {
     height: 1.8rem;
     width: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  /* Hide text labels on very small screens, show only icons */
+  & span {
+    display: none;
+
+    @media (min-width: 360px) {
+      display: inline;
+    }
+  }
+
+  @media (min-width: 480px) {
+    font-size: 1.4rem;
+    padding: 0.6rem 1.2rem;
+    min-height: unset;
   }
 
   &:hover:not(:disabled) {
@@ -82,15 +110,16 @@ function Pagination({ count }) {
     searchParams.set("page", prev);
     setSearchParams(searchParams);
   }
+
   return (
     <StyledPagination>
-      <p>
+      <P>
         Showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
         <span>
           {currentPage === pageCount ? count : currentPage * PAGE_SIZE}
         </span>{" "}
-        of <span> {count} </span> results
-      </p>
+        of <span>{count}</span> results
+      </P>
       <Buttons>
         <PaginationButton onClick={prevPage} disabled={currentPage === 1}>
           <HiChevronLeft /> <span>Previous</span>

@@ -7,7 +7,14 @@ const Row = styled.div`
     props.type === "horizontal" &&
     css`
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+
+      @media (min-width: 480px) {
+        align-items: center;
+        flex-wrap: nowrap;
+      }
     `}
 
   ${(props) =>

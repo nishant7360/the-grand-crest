@@ -6,19 +6,20 @@ const StyledLogo = styled.div`
 `;
 
 const Img = styled.img`
-  height: 9.6rem;
+  height: 7.2rem;
   width: auto;
+
+  @media (min-width: 768px) {
+    height: 9.6rem;
+  }
 `;
 
 function Logo() {
   const { isDarkMode } = useDarkMode();
+
   return (
     <StyledLogo>
-      {isDarkMode ? (
-        <Img src="/new-logo.png" alt="Logo" />
-      ) : (
-        <Img src="/new-logo.png" alt="Logo" />
-      )}
+      <Img src="/new-logo.png" alt="Logo" />
     </StyledLogo>
   );
 }
