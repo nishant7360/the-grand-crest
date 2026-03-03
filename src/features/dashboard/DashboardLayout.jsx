@@ -13,13 +13,10 @@ const StyledDashboardLayout = styled.div`
   grid-template-columns: 1fr;
   gap: 2rem;
 
-  /* Tablet — 2 col grid */
   @media (min-width: 640px) {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
-
-  /* Desktop — original 4 col layout */
   @media (min-width: 1024px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: auto 34rem auto;

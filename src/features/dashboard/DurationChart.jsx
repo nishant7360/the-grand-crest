@@ -96,7 +96,6 @@ function DurationChart({ confirmedStays }) {
     <ChartBox>
       <Heading as="h2">Stay duration summary</Heading>
 
-      {/* Mobile & Tablet: legend below, pie centered */}
       <ResponsiveContainer width="100%" height={260} className="show-on-small">
         <PieChart>
           <Pie
@@ -128,7 +127,6 @@ function DurationChart({ confirmedStays }) {
         </PieChart>
       </ResponsiveContainer>
 
-      {/* Desktop: original layout with legend on the right */}
       <ResponsiveContainer width="100%" height={240} className="show-on-large">
         <PieChart>
           <Pie

@@ -13,7 +13,6 @@ const LoginLayout = styled.main`
   background-color: var(--color-grey-50);
   padding: 2.4rem 1.6rem;
 
-  /* Tablet */
   @media (min-width: 480px) {
     gap: 3.2rem;
     padding: 3.2rem 2.4rem;
@@ -28,7 +27,6 @@ const ContentWrapper = styled.div`
   align-items: center;
   gap: 2.4rem;
 
-  /* Ensure heading and form stretch to full wrapper width */
   & > * {
     width: 100%;
   }
