@@ -1,74 +1,51 @@
-import supabase from "./supabase";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_GRAND_CREST_API_URL;
 
 export async function getCabins() {
-  const { data, error } = await supabase.from("Cabins").select("*");
-
-  if (error) {
+  try {
+    const res = await axios.get(`${API_URL}/cabins/`, {
+      withCredentials: true,
+    });
+    return res.data.data.cabins;
+  } catch (error) {
     console.log(error);
-    throw new Error("Cabins could not be loaded");
+    throw new Error("Cabins can't be fetched");
   }
-
-  return data;
 }
 
 export async function createEditCabin(newCabin, id) {
-  const supabaseUrl = "https://phlkbcxiqwkconnumsvo.supabase.co";
-  const hasImage = newCabin.image?.startsWith?.(supabaseUrl);
+  try {
+    let data = {};
 
-  const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
-    "/",
-    "",
-  );
-  const imagePath = hasImage
-    ? newCabin.image
-    : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+    //create cabin
+    if (!id) {
+      data = await axios.post(`${API_URL}/cabins`, newCabin, {
+        withCredentials: true,
+      });
+    }
+    //edit cabin
+    if (id) {
+      data = await axios.patch(`${API_URL}/cabins/${id}`, newCabin);
+    }
 
-  //1) first create the cabin
-  //create / edit
-  let query = supabase.from("Cabins");
-
-  //create cabin
-  if (!id) {
-    query = query.insert([{ ...newCabin, image: imagePath }]);
-  }
-  //edit cabin
-
-  if (id) {
-    query = query.update([{ ...newCabin, image: imagePath }]).eq("id", id);
-  }
-
-  const { data, error } = await query.select().single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Cabin could not be created/edited");
-  }
-
-  //2) upload the image
-  if (!hasImage) {
-    const { error: storageError } = await supabase.storage
-      .from("cabin-images")
-      .upload(imageName, newCabin.image);
-
-    if (storageError) {
-      //3) delete cabin incase image is not uploaded properl
-      if (!id) {
-        await supabase.from("Cabins").delete().eq("id", data.id);
-      }
-      console.error(storageError);
-      throw new Error("Image could not be uploaded");
+    return data;
+  } catch (error) {
+    if (error) {
+      console.error(error);
+      throw new Error("Cabin could not be created/edited");
     }
   }
-
-  return data;
 }
 
 export async function deleteCabin(id) {
-  const { data, error } = await supabase.from("Cabins").delete().eq("id", id);
-
-  if (error) {
+  try {
+    const data = await axios.delete(`${API_URL}/cabins/${id}`, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
     console.log(error);
-    throw new Error("Cabins could not be deleted");
+    throw new Error("Cabin could't get deleted");
   }
-  return data;
 }

@@ -1,134 +1,140 @@
 import { getToday } from "../utils/helpers";
-import supabase from "./supabase";
 import { PAGE_SIZE } from "../utils/constants";
+import axios from "axios";
+
+const MAIN_API = import.meta.env.VITE_GRAND_CREST_API_URL;
+const API_URL = `${MAIN_API}/bookings`;
 
 export async function getAllBookings({ filter, sortBy, page }) {
-  let query = supabase
-    .from("Bookings")
-    .select(
-      "id,created_at,startDate,endDate,numNights,numGuests,status,totalPrice, Cabins(name), Guests(fullName,email)",
-      { count: "exact" },
-    );
+  const params = {
+    page,
+    limit: PAGE_SIZE,
+  };
 
-  //filter
-  if (filter) {
-    query = query[filter.method || "eq"](filter.field, filter.value);
-  }
+  if (filter) params.filter = JSON.stringify(filter);
+  if (sortBy) params.sortBy = JSON.stringify(sortBy);
 
-  //sort
-  if (sortBy) {
-    query = query.order(sortBy.field, {
-      ascending: sortBy.direction === "asc",
-    });
-  }
+  const { data } = await axios.get(API_URL, { params });
 
-  if (page) {
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
-    query = query.range(from, to);
-  }
-
-  let { data: Bookings, error, count } = await query;
-
-  if (error) {
-    console.log(error);
-    throw new Error("Bookings could not be loaded");
-  }
-  return { bookings: Bookings, count };
+  return {
+    bookings: data.data.bookings,
+    count: data.count,
+  };
 }
 
 export async function getBooking(id) {
-  const { data, error } = await supabase
-    .from("Bookings")
-    .select("*, Cabins(*), Guests(*)")
-    .eq("id", id)
-    .single();
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
 
-  if (error) {
-    console.error(error);
-    throw new Error("Booking not found");
+    return response.data.data.booking;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
-// Returns all BOOKINGS that are were created after the given date. Useful to get bookings created in the last 30 days, for example.
-//DATE : ISO String
 export async function getBookingsAfterDate(date) {
-  const { data, error } = await supabase
-    .from("Bookings")
-    .select("created_at, totalPrice, extraPrice")
-    .gte("created_at", date)
-    .lte("created_at", getToday({ end: true }));
+  try {
+    const { data } = await axios.get(API_URL, {
+      params: {
+        startDate: date,
+        endDate: getToday({ end: true }),
+      },
+    });
 
-  if (error) {
-    console.error(error);
-    throw new Error("Bookings could not get loaded");
+    return data.data.bookings.map((booking) => ({
+      created_at: booking.created_at,
+      totalPrice: booking.totalPrice,
+      extraPrice: booking.extraPrice ?? 0,
+    }));
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
   }
-
-  return data;
 }
 
-// Returns all STAYS that are were created after the given date
 export async function getStaysAfterDate(date) {
-  const { data, error } = await supabase
-    .from("Bookings")
-    // .select('*')
-    .select("*, Guests(fullName)")
-    .gte("startDate", date)
-    .lte("startDate", getToday());
+  try {
+    const { data } = await axios.get(API_URL, {
+      params: {
+        startDate: date,
+        endDate: getToday(),
+      },
+    });
 
-  if (error) {
+    return data.data.bookings;
+  } catch (error) {
     console.error(error);
-    throw new Error("Bookings could not get loaded");
+    throw new Error("Bookings could not be loaded");
   }
-
-  return data;
 }
 
-// Activity means that there is a check in or a check out today
 export async function getStaysTodayActivity() {
-  const { data, error } = await supabase
-    .from("Bookings")
-    .select("*, Guests(fullName, nationality, countryFlag)")
-    .or(
-      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`,
-    )
-    .order("created_at");
+  const todayStart = getToday({ start: true });
+  const todayEnd = getToday({ end: true });
 
-  // Equivalent to this. But by querying this, we only download the data we actually need, otherwise we would need ALL bookings ever created
-  // (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
-  // (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
+  try {
+    const [checkIns, checkOuts] = await Promise.all([
+      axios.get(API_URL, {
+        params: {
+          filter: JSON.stringify({
+            field: "status",
+            value: "unconfirmed",
+          }),
+          startDate: todayStart,
+          endDate: todayEnd,
+          sortBy: JSON.stringify({
+            field: "created_at",
+            direction: "asc",
+          }),
+        },
+        withCredentials: true,
+      }),
 
-  if (error) {
-    console.error(error);
-    throw new Error("Bookings could not get loaded");
+      axios.get(API_URL, {
+        params: {
+          filter: JSON.stringify({
+            field: "status",
+            value: "checked-in",
+          }),
+          startDate: todayStart,
+          endDate: todayEnd,
+          sortBy: JSON.stringify({
+            field: "created_at",
+            direction: "asc",
+          }),
+        },
+        withCredentials: true,
+      }),
+    ]);
+
+    return [...checkIns.data.data.bookings, ...checkOuts.data.data.bookings];
+  } catch (error) {
+    console.log(error);
+    throw new Error("Today's activities could not be loaded");
   }
-  return data;
 }
 
 export async function updateBooking(id, obj) {
-  const { data, error } = await supabase
-    .from("Bookings")
-    .update(obj)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be updated");
+  try {
+    const data = await axios.patch(`${API_URL}/${id}`, obj, {
+      withCredentials: true,
+    });
+    return data.data.updatedBooking;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
   }
-  return data;
 }
 
 export async function deleteBooking(id) {
-  // REMEMBER RLS POLICIES
-  const { data, error } = await supabase.from("Bookings").delete().eq("id", id);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Booking could not be deleted");
+  try {
+    const data = await axios.delete(`${API_URL}/${id}`, {
+      withCredentials: true,
+    });
+    return data.data.updatedBooking;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
   }
-  return data;
 }

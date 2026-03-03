@@ -24,7 +24,13 @@ function CabinTable() {
 
   //SORT BY
   const sortBy = searchParams.get("sortBy") || "startDate-asc";
-  const [field, direction] = sortBy.split("-");
+  let [field, direction] = sortBy.split("-");
+  if (field === "regularPrice") {
+    field = "regular_price";
+  } else if (field === "maxCapacity") {
+    field = "max_capacity";
+  }
+
   const modifier = direction === "asc" ? 1 : -1;
   const sortedCabins = filterdCabins.sort(
     (a, b) => (a[field] - b[field]) * modifier,
@@ -46,7 +52,7 @@ function CabinTable() {
           // data={cabins}
           // data={filterdCabins}
           data={sortedCabins}
-          render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
+          render={(cabin) => <CabinRow cabin={cabin} key={cabin._id} />}
         />
       </Table>
     </Menus>

@@ -5,29 +5,52 @@ import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 
 import { useUpdateuser } from "./useUpdateuser";
+import { useNavigate } from "react-router-dom";
 
 function UpdatePasswordForm() {
   const { register, handleSubmit, formState, getValues, reset } = useForm();
   const { errors } = formState;
+  const navigate = useNavigate();
 
   const { updateUser, isUpdating } = useUpdateuser();
 
-  function onSubmit({ password }) {
-    updateUser({ password }, { onSuccess: reset });
+  function onSubmit({ currentPassword, newPassword }) {
+    updateUser(
+      { currentPassword, newPassword },
+      {
+        onSuccess: () => {
+          reset;
+          navigate("/login");
+        },
+      },
+    );
   }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow
-        label="New Password (min 8 characters)"
-        error={errors?.password?.message}
+        label="Current password"
+        error={errors?.currentPassword?.message}
       >
         <Input
           type="password"
-          id="password"
           autoComplete="current-password"
           disabled={isUpdating}
-          {...register("password", {
+          {...register("currentPassword", {
+            required: "Current password is required",
+          })}
+        />
+      </FormRow>
+
+      <FormRow
+        label="New Password (min 8 characters)"
+        error={errors?.newPassword?.message}
+      >
+        <Input
+          type="password"
+          autoComplete="new-password"
+          disabled={isUpdating}
+          {...register("newPassword", {
             required: "This field is required",
             minLength: {
               value: 8,
@@ -38,21 +61,20 @@ function UpdatePasswordForm() {
       </FormRow>
 
       <FormRow
-        label="Confirm password"
+        label="Confirm new password"
         error={errors?.passwordConfirm?.message}
       >
         <Input
           type="password"
-          autoComplete="new-password"
-          id="passwordConfirm"
           disabled={isUpdating}
           {...register("passwordConfirm", {
             required: "This field is required",
             validate: (value) =>
-              getValues().password === value || "Passwords need to match",
+              getValues().newPassword === value || "Passwords need to match",
           })}
         />
       </FormRow>
+
       <FormRow>
         <Button onClick={reset} type="reset" variation="secondary">
           Cancel

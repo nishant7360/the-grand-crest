@@ -35,10 +35,9 @@ function CheckinBooking() {
   const moveBack = useMoveBack();
 
   if (isLoading || isLoadingSettings) return <Spinner />;
-
   const {
-    id: bookingId,
-    Guests,
+    _id: bookingId,
+    guestId,
     totalPrice,
     numGuests,
     hasBreakfast,
@@ -96,7 +95,7 @@ function CheckinBooking() {
           disabled={confirmPaid || isChekingIn}
           id="confirm"
         >
-          I confirm that {Guests.fullName} has paid the total amount{" "}
+          I confirm that {guestId.fullName} has paid the total amount{" "}
           {!addBreakfast
             ? formatCurrency(totalPrice)
             : `${formatCurrency(totalPrice + optionalBreakfastPrice)} (${formatCurrency(totalPrice)} + ${formatCurrency(optionalBreakfastPrice)})`}
@@ -106,7 +105,7 @@ function CheckinBooking() {
 
       <ButtonGroup>
         <Button onClick={handleCheckin} disabled={!confirmPaid || isChekingIn}>
-          Check in booking #{bookingId}
+          Check in booking
         </Button>
         <Button variation="secondary" onClick={moveBack}>
           Back

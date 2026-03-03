@@ -10,6 +10,7 @@ import {
 import DataItem from "../../ui/DataItem";
 import { Flag } from "../../ui/Flag";
 import { formatDistanceFromNow, formatCurrency } from "../../utils/helpers";
+import { useSettings } from "../settings/useSettings";
 
 /* =======================
    STYLES
@@ -158,22 +159,28 @@ const Footer = styled.footer`
 ======================= */
 
 function BookingDataBox({ booking }) {
+  const { settings: { breakfastPrice } = {} } = useSettings();
   const {
     created_at,
     startDate,
     endDate,
     numNights,
     numGuests,
-    cabinPrice,
-    extrasPrice,
     totalPrice,
     hasBreakfast,
     observations,
     isPaid,
-    Guests: { fullName: guestName, email, country, countryFlag, nationalID },
-    Cabins: { name: cabinName },
+    guestId,
+    cabinId,
   } = booking;
 
+  const guestName = guestId?.fullName;
+  const email = guestId?.email;
+  const country = guestId?.country;
+  const countryFlag = guestId?.countryFlag;
+  const nationalID = guestId?.nationalID;
+  const cabinName = cabinId?.name;
+  const cabinPrice = cabinId?.regular_price;
   return (
     <StyledBookingDataBox>
       <Header>
@@ -223,11 +230,11 @@ function BookingDataBox({ booking }) {
             {formatCurrency(totalPrice)}
             {hasBreakfast &&
               ` (${formatCurrency(cabinPrice)} cabin + ${formatCurrency(
-                extrasPrice,
+                numGuests * breakfastPrice,
               )} breakfast)`}
           </DataItem>
 
-          <StatusPill isPaid={isPaid}>{isPaid ? "Paid" : "Pending"}</StatusPill>
+          <StatusPill>{isPaid ? "Paid" : "Pending"}</StatusPill>
         </Price>
       </Section>
 

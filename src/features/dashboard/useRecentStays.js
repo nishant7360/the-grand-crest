@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { subDays } from "date-fns";
 import { useSearchParams } from "react-router-dom";
 import { getStaysAfterDate } from "../../services/apiBookings";
+import { calNumNights } from "../../utils/calNumNights";
 
 export function useRecentStays() {
   const [searchParams] = useSearchParams();
@@ -17,9 +18,14 @@ export function useRecentStays() {
     queryKey: ["stays", `last-${numDays}`],
   });
 
-  const confirmedStays = stays?.filter(
-    (stay) => stay.status === "checked-in" || stay.status === "checked-out",
-  );
+  const confirmedStays = stays
+    ?.filter(
+      (stay) => stay.status === "checked-in" || stay.status === "checked-out",
+    )
+    .map((stay) => ({
+      ...stay,
+      numNights: calNumNights(stay),
+    }));
 
   return { confirmedStays, stays, isLoading, numDays };
 }

@@ -50,7 +50,7 @@ function BookingRow({ booking }) {
   const { checkout, isCheckingOut } = useCheckout();
   const { delBooking, isDeleting } = useDeleteBooking();
   const {
-    id: bookingId,
+    _id: bookingId,
     created_at,
     startDate,
     endDate,
@@ -58,12 +58,12 @@ function BookingRow({ booking }) {
     numGuests,
     totalPrice,
     status,
-    Guests = {},
-    Cabins = {},
+    guestId = {},
+    cabinId = {},
   } = booking;
 
-  const { fullName: guestName, email } = Guests;
-  const { name: cabinName } = Cabins;
+  const { fullName: guestName, email } = guestId;
+  const { name: cabinName } = cabinId;
   const navigate = useNavigate();
 
   const statusToTagName = {
@@ -85,11 +85,11 @@ function BookingRow({ booking }) {
         <span>
           {isToday(new Date(startDate))
             ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
+            : formatDistanceFromNow(startDate)}
           &rarr; {numNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
+          {format(new Date(startDate), "MMM dd yyyy")} &mdash;
           {format(new Date(endDate), "MMM dd yyyy")}
         </span>
       </Stacked>

@@ -9,5 +9,5 @@ export function useUser() {
     staleTime: 0,
   });
 
-  return { user, isLoading, isAuthenticated: user?.role === "authenticated" };
+  return { user, isLoading, isAuthenticated: user?.role === "employee" };
 }

@@ -4,13 +4,17 @@ A modern hotel management web application designed to streamline hotel operation
 
 ![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-Latest-646CFF?style=flat&logo=vite&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat&logo=supabase&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?style=flat&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-Framework-000000?style=flat&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=flat&logo=mongodb&logoColor=white)
 
 ## 📋 Overview
 
 The Grand Crest is a comprehensive hotel management system that empowers hotel staff to efficiently manage daily operations. From guest check-ins to performance analytics, this application provides all the essential tools needed to run a modern hotel.
 
-Built with React and Vite for a blazing-fast frontend experience, and powered by Supabase for robust backend infrastructure, The Grand Crest offers real-time data synchronization and a seamless user experience.
+Built with React and Vite for a blazing-fast frontend experience, and powered by a custom Node.js + Express + MongoDB backend deployed on Render, The Grand Crest offers secure JWT-based authentication and a seamless user experience.
+
+**🌐 Backend API:** [https://the-grand-crest-api.onrender.com](https://the-grand-crest-api.onrender.com)
 
 ## ✨ Features
 
@@ -39,14 +43,14 @@ Built with React and Vite for a blazing-fast frontend experience, and powered by
 
 ### 🔐 Authentication & Security
 
-- Secure authentication powered by Supabase
+- Secure JWT-based authentication
+- Protected API routes with middleware
 - Role-based access control
-- Protected routes and data
+- Token storage and refresh handling
 
 ### 🔄 Real-time Updates
 
-- Live data synchronization
-- Instant UI updates on database changes
+- Instant UI updates on data changes
 - Optimistic UI updates for better UX
 
 ## 🛠️ Tech Stack
@@ -62,12 +66,12 @@ Built with React and Vite for a blazing-fast frontend experience, and powered by
 
 ### Backend & Services
 
-- **Supabase** - Complete backend solution
-  - PostgreSQL Database
-  - RESTful API
-  - Authentication
-  - Real-time subscriptions
-  - Row Level Security (RLS)
+- **Node.js** - JavaScript runtime environment
+- **Express.js** - Fast, minimalist web framework
+- **MongoDB** - NoSQL database for flexible data storage
+- **Mongoose** - Elegant MongoDB object modeling for Node.js
+- **JWT (JSON Web Tokens)** - Secure authentication and authorization
+- **Deployed on Render** - [https://the-grand-crest-api.onrender.com](https://the-grand-crest-api.onrender.com)
 
 ### Development Tools
 
@@ -81,7 +85,7 @@ Built with React and Vite for a blazing-fast frontend experience, and powered by
 
 - Node.js (v16 or higher)
 - npm or yarn
-- Supabase account (for backend setup)
+- Access to the deployed backend API (or a local MongoDB instance for local backend development)
 
 ### Installation
 
@@ -100,12 +104,13 @@ Built with React and Vite for a blazing-fast frontend experience, and powered by
 
 3. **Environment Setup**
 
-   Create a `.env` file in the root directory and add your Supabase credentials:
+   Create a `.env` file in the root directory and add your backend API URL:
 
    ```env
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_API_BASE_URL=https://the-grand-crest-api.onrender.com
    ```
+
+   > If running the backend locally, replace the URL with your local server address (e.g., `http://localhost:5000`).
 
 4. **Run the development server**
 
@@ -133,22 +138,36 @@ the-grand-crest/
 ├── src/
 │   ├── components/      # Reusable React components
 │   ├── features/        # Feature-based modules
-│   ├── pages/          # Page components
-│   ├── services/       # API services and Supabase integration
-│   ├── hooks/          # Custom React hooks
-│   ├── context/        # React context providers
-│   ├── utils/          # Utility functions
-│   ├── styles/         # Global styles
-│   ├── App.jsx         # Main app component
-│   └── main.jsx        # Application entry point
-├── .eslintrc.cjs       # ESLint configuration
-├── .eslintrc.json      # Additional ESLint rules
-├── .gitignore          # Git ignore file
-├── index.html          # HTML template
-├── package.json        # Project dependencies
-├── vite.config.js      # Vite configuration
-└── README.md           # Project documentation
+│   ├── pages/           # Page components
+│   ├── services/        # API services and Axios/Fetch integration
+│   ├── hooks/           # Custom React hooks
+│   ├── context/         # React context providers
+│   ├── utils/           # Utility functions
+│   ├── styles/          # Global styles
+│   ├── App.jsx          # Main app component
+│   └── main.jsx         # Application entry point
+├── .eslintrc.cjs        # ESLint configuration
+├── .eslintrc.json       # Additional ESLint rules
+├── .gitignore           # Git ignore file
+├── index.html           # HTML template
+├── package.json         # Project dependencies
+├── vite.config.js       # Vite configuration
+└── README.md            # Project documentation
 ```
+
+## 🌐 API Reference
+
+The frontend communicates with the backend REST API hosted at:
+
+**Base URL:** `https://the-grand-crest-api.onrender.com`
+
+> **Note:** The backend is hosted on Render's free tier. The first request may take a few seconds if the server is in a cold-start state.
+
+Key API features:
+
+- **RESTful endpoints** for bookings, guests, cabins, and settings
+- **JWT Authentication** — include the token in the `Authorization: Bearer <token>` header for protected routes
+- **Mongoose schemas** for structured data validation
 
 ## 🎯 Use Cases
 
@@ -190,8 +209,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Acknowledgments
 
-- Supabase team for the excellent backend platform
-- React and Vite communities for amazing tools
+- The Node.js, Express, and MongoDB communities for excellent tools and documentation
+- React and Vite communities for amazing frontend tooling
+- Render for backend hosting
 - All contributors who help improve this project
 
 ---

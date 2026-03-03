@@ -14,8 +14,8 @@ export function useCheckin() {
         isPaid: true,
         ...breakfast,
       }),
-    onSuccess: (data) => {
-      toast.success(`Booking #${data.id} successfully checkdin`);
+    onSuccess: () => {
+      toast.success("Booking successfully checkdin");
       queryClient.invalidateQueries({ active: true });
       navigate("/");
     },

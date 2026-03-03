@@ -1,27 +1,26 @@
-import supabase from "./supabase";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_GRAND_CREST_API_URL;
 
 export async function getSettings() {
-  const { data, error } = await supabase.from("Settings").select("*").single();
+  try {
+    const data = await axios.get(`${API_URL}/settings`);
 
-  if (error) {
-    console.error(error);
-    throw new Error("Settings could not be loaded");
+    return data.data.data.settings[0];
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
   }
-  return data;
 }
 
-// We expect a newSetting object that looks like {setting: newValue}
 export async function updateSetting(newSetting) {
-  const { data, error } = await supabase
-    .from("Settings")
-    .update(newSetting)
-    // There is only ONE row of settings, and it has the ID=1, and so this is the updated one
-    .eq("id", 1)
-    .single();
-
-  if (error) {
-    console.error(error);
-    throw new Error("Settings could not be updated");
+  try {
+    const data = await axios.patch(`${API_URL}/settings`, newSetting, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
   }
-  return data;
 }

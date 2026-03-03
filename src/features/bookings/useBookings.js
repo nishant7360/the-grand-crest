@@ -7,42 +7,64 @@ export function useBookings() {
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
 
-  //filter
-  const filterValue = searchParams.get("status");
+  const status = searchParams.get("status");
+
   const filter =
-    !filterValue || filterValue === "all"
+    !status || status === "all"
       ? null
-      : { field: "status", value: filterValue, method: "eq" };
+      : {
+          field: "status",
+          value: status,
+          method: "eq",
+        };
 
-  // Sort
   const sortByRaw = searchParams.get("sortBy") || "startDate-desc";
-  const [field, direction] = sortByRaw.split("-");
-  const sortBy = { field, direction };
+  const [sortField, sortDirection] = sortByRaw.split("-");
 
-  //Pagination
-  const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+  const sortBy = {
+    field: sortField,
+    direction: sortDirection,
+  };
 
-  //Query
+  const page = Number(searchParams.get("page")) || 1;
+
   const { isLoading, data, error } = useQuery({
     queryKey: ["bookings", filter, sortBy, page],
-    queryFn: () => getAllBookings({ filter, sortBy, page }),
+    queryFn: () =>
+      getAllBookings({
+        filter,
+        sortBy,
+        page,
+      }),
+    keepPreviousData: true,
   });
+
   const bookings = data?.bookings ?? [];
   const count = data?.count ?? 0;
 
-  // Pre-fetching
   const pageCount = Math.ceil(count / PAGE_SIZE);
+
   if (page < pageCount) {
     queryClient.prefetchQuery({
       queryKey: ["bookings", filter, sortBy, page + 1],
-      queryFn: () => getAllBookings({ filter, sortBy, page: page + 1 }),
+      queryFn: () =>
+        getAllBookings({
+          filter,
+          sortBy,
+          page: page + 1,
+        }),
     });
   }
 
   if (page > 1) {
     queryClient.prefetchQuery({
       queryKey: ["bookings", filter, sortBy, page - 1],
-      queryFn: () => getAllBookings({ filter, sortBy, page: page - 1 }),
+      queryFn: () =>
+        getAllBookings({
+          filter,
+          sortBy,
+          page: page - 1,
+        }),
     });
   }
 

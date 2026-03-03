@@ -9,7 +9,7 @@ import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
-  const { id: editId, ...editValues } = cabinToEdit;
+  const { _id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({
@@ -21,26 +21,40 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const isWorking = isCreating || isEditing;
 
   function onSubmit(data) {
-    const image = typeof data.image === "string" ? data.image : data.image[0];
-    if (isEditSession)
+    const formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("max_capacity", data.maxCapacity);
+    formData.append("regular_price", data.regularPrice);
+    formData.append("discount", data.discount);
+    formData.append("description", data.description);
+
+    const image = typeof data.image === "string" ? data.image : data.image?.[0];
+
+    if (image instanceof File) {
+      formData.append("image", image);
+    } else if (typeof image === "string") {
+      formData.append("image", image);
+    }
+
+    if (isEditSession) {
       editCabin(
-        { newCabinData: { ...data, image }, id: editId },
+        { id: editId, newCabinData: formData },
         {
           onSuccess: () => {
-            onCloseModal?.();
             reset();
+            onCloseModal?.();
           },
         },
       );
-    else
-      createCabin(
-        { ...data, image: image },
-        {
-          onSuccess: () => {
-            (reset(), onCloseModal?.());
-          },
+    } else {
+      createCabin(formData, {
+        onSuccess: () => {
+          reset();
+          onCloseModal?.();
         },
-      );
+      });
+    }
   }
 
   function onError(errors) {

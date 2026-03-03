@@ -1,75 +1,83 @@
-import supabase, { supabaseUrl } from "./supabase";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_GRAND_CREST_API_URL;
 
 export async function signup({ fullName, email, password }) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    data: {
+  try {
+    const data = await axios.post(`${API_URL}/auth/createUser`, {
       fullName,
-      avatar: "",
-    },
-  });
-
-  if (error) throw new Error(error.message);
-  return data;
+      email,
+      password,
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
 }
 
 export async function login({ email, password }) {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+  try {
+    const { data } = await axios.post(
+      `${API_URL}/auth/login`,
+      { email, password },
+      { withCredentials: true },
+    );
 
-  if (error) throw new Error(error.message);
-  console.log(data);
-  return data;
+    return data.data.user;
+  } catch (error) {
+    console.log("LOGIN ERROR:", error.response?.data);
+    throw new Error(error.response?.data?.message || "Login failed");
+  }
 }
 
 export async function getCurrentUser() {
-  const { data: session } = await supabase.auth.getSession();
+  try {
+    const { data } = await axios.get(`${API_URL}/auth/getme`, {
+      withCredentials: true,
+    });
 
-  if (!session.session) return null;
-
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) throw new Error(error.message);
-
-  return data?.user;
+    return data.data.user;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
 }
 
 export async function logout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  try {
+    await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not loggout!");
+  }
 }
 
-export async function updateCurrentUser({ fullName, password, avatar }) {
-  //1. update password or full name
-  let updateData;
-  if (password) updateData = { password };
-  if (fullName) updateData = { data: { fullName } };
+export async function updateCurrentUser({
+  fullName,
+  currentPassword,
+  newPassword,
+  avatar,
+}) {
+  try {
+    let formdata = new FormData();
 
-  const { data, error } = await supabase.auth.updateUser(updateData);
+    if (fullName) formdata.append("fullName", fullName);
+    if (avatar) formdata.append("avatar", avatar);
 
-  if (error) throw new Error(error.message);
-  if (!avatar) return data;
+    if (currentPassword) formdata.append("currentPassword", currentPassword);
+    if (newPassword) formdata.append("newPassword", newPassword);
 
-  //2. update the avatar image
+    const { data } = await axios.patch(`${API_URL}/auth/updateMe`, formdata, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-  const fileName = `avatar-${data.id}-${Math.random()}`;
-
-  const { error: storageError } = await supabase.storage
-    .from("avatars")
-    .upload(fileName, avatar);
-
-  if (storageError) throw new Error(storageError.message);
-  //3 update avatar in the user
-
-  const { data: updatedUser, error: error2 } = await supabase.auth.updateUser({
-    data: {
-      avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
-    },
-  });
-
-  if (error2) throw new Error(error2.message);
-  return updatedUser;
+    return data.data.user;
+  } catch (error) {
+    console.log(error);
+    throw new Error("User can't get updated");
+  }
 }

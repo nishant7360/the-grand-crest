@@ -14,13 +14,12 @@ const StyledLoginForm = styled.div`
 `;
 
 function LoginForm() {
-  const [email, setEmail] = useState("nishant@test.com");
+  const [email, setEmail] = useState("test@gmail.com");
   const [password, setPassword] = useState("pass1234");
   const { login, isLoggingIn } = useLogin();
 
   function handleSubmit(e) {
     e.preventDefault();
-
     if (!email && !password) return;
     login(
       { email, password },

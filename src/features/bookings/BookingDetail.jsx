@@ -37,7 +37,7 @@ function BookingDetail() {
 
   if (!booking) return <Empty resourceName="booking" />;
 
-  const { status, id: bookingId } = booking;
+  const { status, _id: bookingId } = booking;
 
   const statusToTagName = {
     unconfirmed: "blue",
