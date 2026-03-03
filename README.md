@@ -14,7 +14,8 @@ The Grand Crest is a comprehensive hotel management system that empowers hotel s
 
 Built with React and Vite for a blazing-fast frontend experience, and powered by a custom Node.js + Express + MongoDB backend deployed on Render, The Grand Crest offers secure JWT-based authentication and a seamless user experience.
 
-**🌐 Backend API:** [https://the-grand-crest-api.onrender.com](https://the-grand-crest-api.onrender.com)
+🌐 Backend API: https://the-grand-crest-api.onrender.com
+🌐 Deployed URL: https://the-grand-crest.vercel.app
 
 ## ✨ Features
 
